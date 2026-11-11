@@ -129,7 +129,10 @@ fun FilmlistanScreen(viewModel: FilmlistanViewModel = viewModel()) {
                         modifier = Modifier.weight(1f)
                     )
                     Spacer(Modifier.width(8.dp))
-                    Button(onClick = { viewModel.addFilm() }) {
+                    Button(
+                        onClick = { viewModel.addFilm() },
+                        enabled = state.nyTitel.isNotBlank()
+                    ) {
                         Text("Lägg till")
                     }
                 }
