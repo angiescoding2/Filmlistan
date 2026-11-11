@@ -27,6 +27,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TextField
@@ -89,7 +90,7 @@ fun BildPlats(titel: String, modifier: Modifier = Modifier) {
     }
 }
 @Composable
-fun FilmKort(film: Film, modifier: Modifier = Modifier) {
+fun FilmKort(film: Film, onToggle: () -> Unit, modifier: Modifier = Modifier) {
     Card(modifier = modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier.padding(12.dp),
@@ -97,10 +98,14 @@ fun FilmKort(film: Film, modifier: Modifier = Modifier) {
         ) {
             BildPlats(film.titel)
             Spacer(Modifier.width(12.dp))
-            Column {
+            Column(modifier = Modifier.weight(1f)) {
                 Text(film.titel, style = MaterialTheme.typography.titleMedium)
                 Text("${film.ar} · ${film.genre}", style = MaterialTheme.typography.bodySmall)
             }
+            Checkbox(
+                checked = film.sedd,
+                onCheckedChange = { onToggle() }
+            )
         }
     }
 }
@@ -109,6 +114,8 @@ fun FilmKort(film: Film, modifier: Modifier = Modifier) {
 @Composable
 fun FilmlistanScreen(viewModel: FilmlistanViewModel = viewModel()) {
     val state = viewModel.uiState
+    val villSe = state.filmer.filter { !it.sedd }
+    val sett = state.filmer.filter { it.sedd }
     Scaffold(
         topBar = { TopAppBar(title = { Text("Filmlistan") }) }
     ) { innerPadding ->
@@ -137,10 +144,18 @@ fun FilmlistanScreen(viewModel: FilmlistanViewModel = viewModel()) {
                     }
                 }
             }
-            items(state.filmer) { film ->
-                FilmKort(film)
+            item {
+                Text("Vill se (${villSe.size})", style = MaterialTheme.typography.titleMedium)
+            }
+            items(villSe, key = { it.id }) { film ->
+                FilmKort(film, onToggle = { viewModel.toggleSeen(film.id) })
+            }
+            item {
+                Text("Sett (${sett.size})", style = MaterialTheme.typography.titleMedium)
+            }
+            items(sett, key = { it.id }) { film ->
+                FilmKort(film, onToggle = { viewModel.toggleSeen(film.id) })
             }
         }
     }
 }
-

@@ -31,5 +31,11 @@ class FilmlistanViewModel : ViewModel() {
             nyTitel = ""
         )
     }
-
+    fun toggleSeen(id: Int) {
+        uiState = uiState.copy(
+            filmer = uiState.filmer.map { film ->
+                if (film.id == id) film.copy(sedd = !film.sedd) else film
+            }
+        )
+    }
 }
