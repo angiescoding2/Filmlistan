@@ -31,6 +31,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TopAppBar
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 
 class MainActivity : ComponentActivity() {
@@ -104,7 +105,8 @@ fun FilmKort(film: Film, modifier: Modifier = Modifier) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FilmlistanScreen() {
+fun FilmlistanScreen(viewModel: FilmlistanViewModel = viewModel()) {
+    val state = viewModel.uiState
     Scaffold(
         topBar = { TopAppBar(title = { Text("Filmlistan") }) }
     ) { innerPadding ->
@@ -115,7 +117,7 @@ fun FilmlistanScreen() {
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            items(startfilmer) { film ->
+            items(state.filmer) { film ->
                 FilmKort(film)
             }
         }
