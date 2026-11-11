@@ -13,8 +13,23 @@ data class FilmlistanUiState(
 class FilmlistanViewModel : ViewModel() {
     var uiState by mutableStateOf(FilmlistanUiState())
         private set
+    private var nextId = 4
+
     fun onNewTitleChange(text: String) {
         uiState = uiState.copy(nyTitel = text)
+    }
+
+    fun addFilm() {
+        val titel = uiState.nyTitel.trim()
+        if (titel.isBlank()) return
+
+        val nyFilm = Film(nextId, titel, 2026, "Okänd")
+        nextId++
+
+        uiState = uiState.copy(
+            filmer = uiState.filmer + nyFilm,
+            nyTitel = ""
+        )
     }
 
 }

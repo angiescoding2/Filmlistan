@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -119,13 +120,19 @@ fun FilmlistanScreen(viewModel: FilmlistanViewModel = viewModel()) {
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             item {
-                TextField(
-                    value = state.nyTitel,
-                    onValueChange = { viewModel.onNewTitleChange(it) },
-                    label = { Text("Ny titel") },
-                    singleLine = true,
-                    modifier = Modifier.fillMaxWidth()
-                )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    TextField(
+                        value = state.nyTitel,
+                        onValueChange = { viewModel.onNewTitleChange(it) },
+                        label = { Text("Ny titel") },
+                        singleLine = true,
+                        modifier = Modifier.weight(1f)
+                    )
+                    Spacer(Modifier.width(8.dp))
+                    Button(onClick = { viewModel.addFilm() }) {
+                        Text("Lägg till")
+                    }
+                }
             }
             items(state.filmer) { film ->
                 FilmKort(film)
