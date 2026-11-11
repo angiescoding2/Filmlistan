@@ -28,6 +28,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
@@ -117,6 +118,15 @@ fun FilmlistanScreen(viewModel: FilmlistanViewModel = viewModel()) {
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
+            item {
+                TextField(
+                    value = state.nyTitel,
+                    onValueChange = { viewModel.onNewTitleChange(it) },
+                    label = { Text("Ny titel") },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
             items(state.filmer) { film ->
                 FilmKort(film)
             }
