@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
@@ -34,8 +35,11 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.draw.clip
 
 
 class MainActivity : ComponentActivity() {
@@ -71,23 +75,36 @@ data class Film(
     val ar: Int,
     val genre: String,
     val sedd: Boolean = false,
+    val bild: Int? = null,
+
 )
 
 val startfilmer = listOf(
-    Film(1, "Norrskensväktaren", 2024, "Äventyr"),
-    Film(2, "Den sista bussen", 2021, "Drama"),
-    Film(3, "Kodnamn Granit", 2023, "Thriller"),
+    Film(1, "Norrskensväktaren", 2024, "Äventyr", bild = R.drawable.norrsken),
+    Film(2, "Den sista bussen", 2021, "Drama", bild = R.drawable.bussen),
+    Film(3, "Kodnamn Granit", 2023, "Thriller", bild = R.drawable.granit),
 )
 
 @Composable
-fun BildPlats(titel: String, modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier
-            .size(56.dp)
-            .background(MaterialTheme.colorScheme.primaryContainer, RoundedCornerShape(8.dp)),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(titel.take(1), style = MaterialTheme.typography.titleLarge)
+fun BildPlats(titel: String, bild: Int?, modifier: Modifier = Modifier) {
+    if (bild != null) {
+        Image(
+            painter = painterResource(id = bild),
+            contentDescription = titel,
+            contentScale = ContentScale.Crop,
+            modifier = modifier
+                .size(56.dp)
+                .clip(RoundedCornerShape(8.dp))
+        )
+    } else {
+        Box(
+            modifier = modifier
+                .size(56.dp)
+                .background(MaterialTheme.colorScheme.primaryContainer, RoundedCornerShape(8.dp)),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(titel.take(1), style = MaterialTheme.typography.titleLarge)
+        }
     }
 }
 @Composable
@@ -97,7 +114,7 @@ fun FilmKort(film: Film, onToggle: () -> Unit, onRemove: () -> Unit, modifier: M
             modifier = Modifier.padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            BildPlats(film.titel)
+            BildPlats(film.titel, film.bild)
             Spacer(Modifier.width(12.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(film.titel, style = MaterialTheme.typography.titleMedium)
