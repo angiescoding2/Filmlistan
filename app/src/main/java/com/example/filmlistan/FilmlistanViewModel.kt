@@ -38,4 +38,9 @@ class FilmlistanViewModel : ViewModel() {
             }
         )
     }
+    fun removeFilm(id: Int) {
+        uiState = uiState.copy(
+            filmer = uiState.filmer.filter { it.id != id }
+        )
+    }
 }

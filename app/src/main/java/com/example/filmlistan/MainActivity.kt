@@ -30,6 +30,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.ui.Alignment
@@ -90,7 +91,7 @@ fun BildPlats(titel: String, modifier: Modifier = Modifier) {
     }
 }
 @Composable
-fun FilmKort(film: Film, onToggle: () -> Unit, modifier: Modifier = Modifier) {
+fun FilmKort(film: Film, onToggle: () -> Unit, onRemove: () -> Unit, modifier: Modifier = Modifier) {
     Card(modifier = modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier.padding(12.dp),
@@ -106,6 +107,9 @@ fun FilmKort(film: Film, onToggle: () -> Unit, modifier: Modifier = Modifier) {
                 checked = film.sedd,
                 onCheckedChange = { onToggle() }
             )
+            TextButton(onClick = onRemove) {
+                Text("Ta bort")
+            }
         }
     }
 }
@@ -148,13 +152,21 @@ fun FilmlistanScreen(viewModel: FilmlistanViewModel = viewModel()) {
                 Text("Vill se (${villSe.size})", style = MaterialTheme.typography.titleMedium)
             }
             items(villSe, key = { it.id }) { film ->
-                FilmKort(film, onToggle = { viewModel.toggleSeen(film.id) })
+                FilmKort(
+                    film,
+                    onToggle = { viewModel.toggleSeen(film.id) },
+                    onRemove = { viewModel.removeFilm(film.id) }
+                )
             }
             item {
                 Text("Sett (${sett.size})", style = MaterialTheme.typography.titleMedium)
             }
             items(sett, key = { it.id }) { film ->
-                FilmKort(film, onToggle = { viewModel.toggleSeen(film.id) })
+                FilmKort(
+                    film,
+                    onToggle = { viewModel.toggleSeen(film.id) },
+                    onRemove = { viewModel.removeFilm(film.id) }
+                )
             }
         }
     }
